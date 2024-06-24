@@ -13,17 +13,22 @@
  * def 5
  * abcz  */
 #include <iostream>
-#include <string>
+#include <cstring>
 
 int main(){
     const char* p = "abc";
     std::cout << p << std::endl;
-    char* q = new char[4]{'d', 'e', 'f', '\0'};
+
+    const char str[] = "abc";
+    char *q = new char[strlen(str) + 1];
+
+    strcpy(q, str);
     std::cout << q << " "<< std::string(q).length() << std::endl;
-    for (int i = 0; i < 3; i++) {
-        q[i] = p[i];
-    }
-    std::cin >> q[4];
+    strcpy(q, p);
+    char inputchar;
+    std::cin >> inputchar;
+    q[strlen(p)] = inputchar;
+    q[strlen(p) + 1] = '\0';
     std::cout << q << " "<< std::string(q).length() << std::endl;
 
     return 0;

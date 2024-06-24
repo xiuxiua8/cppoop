@@ -63,6 +63,10 @@ public:
         pStu[index].compScore();
     }
 
+    void releaseMemory() {
+        delete pStu;
+    }
+
 };
 
 int main() {
@@ -81,4 +85,5 @@ int main() {
     for(int i = 0; i < num; i++) {
         teacher.show(i);
     }
+    teacher.releaseMemory();
 }
