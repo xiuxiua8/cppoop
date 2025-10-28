@@ -17,8 +17,11 @@ void visit(int i) {
 
 template <typename Graph>
 void BFSTraverse(Graph &G){
-    for (int i=0; i<G.vexnum; i++)
+    int d[10]; 
+    for (int i=0; i<G.vexnum; i++) {
         visited[i] = false;
+        d[i] = 100;
+    }
     InitQueue(Q);
     
     for (int i=0; i < G.vexnum; i++)
@@ -27,7 +30,8 @@ void BFSTraverse(Graph &G){
                 cout << "mymethod";
                 BFS(G, i);
             } else if constexpr (std::is_same_v<Graph, MGraph>) {
-                BFS2(G, i);
+                d[i] = 0;
+                BFS3(G, i, d);
             }
 }
 
@@ -66,7 +70,28 @@ void BFS2(MGraph G, int i) {
         }
     }
 }
-
+//单源最短路径
+void BFS3(MGraph G, int i, int *d) {
+    visit(i);
+    visited[i] = true;
+    EnQueue(Q, i);
+    while(!IsEmpty(Q)) {
+        int v;
+        DeQueue(Q, v);
+        for(int w = 0; w<G.vexnum; w++) {
+            if (visited[w]==false && G.edge[v][w] == 1){
+                visit(w);
+                visited[w] = true;
+                d[w] = d[v] + 1;
+                EnQueue(Q, w);
+            }
+        }
+    }
+    //cout << d ;
+    for (int i =0; i <10 ; i++) {
+        cout << d[i] << " ";
+    }
+}
 int main() {
     cout << "Adjacency List Graph (mixed transit network)" << endl;
 
