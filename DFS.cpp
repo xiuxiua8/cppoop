@@ -1,71 +1,56 @@
 #define main graph_demo_main
 #include "graph.cpp"
 #undef main
-#include "LinkQueue.cpp"
+#include "SqStack.cpp"
 
 #include <iostream>
 #include <type_traits>
 using namespace std;
 
 bool visited[MaxVertexNum];
-LinkQueue Q{nullptr, nullptr};
+SqStack S;
 
 void visit(int i) {
     cout << "  visited #" << i << endl;
 }
 
-
 template <typename Graph>
-void BFSTraverse(Graph &G){
-    for (int i=0; i<G.vexnum; i++)
+void DFSTraverse(Graph &G){
+    for (int i = 0; i< G.vexnum; i++)
         visited[i] = false;
-    InitQueue(Q);
-    
-    for (int i=0; i < G.vexnum; i++)
-        if (!visited[i]) 
+    for (int i = 0; i< G.vexnum; i++)
+        if (!visited[i]) //对每一个连通分量调用一次BFS
             if constexpr (std::is_same_v<Graph, ALGraph>) {
-                cout << "mymethod";
-                BFS(G, i);
+                DFS(G, i);
             } else if constexpr (std::is_same_v<Graph, MGraph>) {
-                BFS2(G, i);
+                DFS2(G, i);
             }
 }
 
-//邻接表
-void BFS(ALGraph G, int i){
+void DFS(ALGraph G, int i){
     visit(i);
     visited[i] = true;
-    EnQueue(Q, i);
-    while(!IsEmpty(Q)) {
-        int v;
-        DeQueue(Q, v);
-        for(ALArcNode *p=G.vertices[v].firstarc; p; p = p->nextarc) {
-            int w = p->adjvex;
-            if (visited[w]==false){
-                visit(w);
-                visited[w] = true;
-                EnQueue(Q, w);
-            }
+    for (ALArcNode *p=G.vertices[i].firstarc; p; p= p->nextarc) { // 在v的所有邻接点中循环
+        int v = p->adjvex;
+        if (!visited[v]) {
+            visited[v] = true;
+            DFS(G, v);
         }
     }
 }
 
-void BFS2(MGraph G, int i) {
+void DFS2(MGraph G, int i) {
     visit(i);
     visited[i] = true;
-    EnQueue(Q, i);
-    while(!IsEmpty(Q)) {
-        int v;
-        DeQueue(Q, v);
-        for(int w = 0; w<G.vexnum; w++) {
-            if (visited[w]==false && G.edge[v][w] == 1){
-                visit(w);
-                visited[w] = true;
-                EnQueue(Q, w);
-            }
+    for (int w = 0; w < G.vexnum; w++) {  // 在v的所有邻接点中循环
+        if (visited[w] == false&& G.edge[i][w] == 1){
+            visited[w] = true;
+            DFS2(G, w);
         }
     }
-}
+
+} 
+
 
 int main() {
     cout << "Adjacency List Graph (mixed transit network)" << endl;
@@ -102,8 +87,8 @@ int main() {
     }
 
     printALGraph(listGraph);
-    cout << "BFS order (adjacency list):" << endl;
-    BFSTraverse(listGraph);
+    cout << "DFS order (adjacency list):" << endl;
+    DFSTraverse(listGraph);
 
     cout << "\nAdjacency Matrix Graph (regional road map)" << endl;
 
@@ -139,8 +124,8 @@ int main() {
     }
 
     printMGraph(matrixGraph);
-    cout << "BFS order (adjacency matrix):" << endl;
-    BFSTraverse(matrixGraph);
+    cout << "DFS order (adjacency matrix):" << endl;
+    DFSTraverse(matrixGraph);
 
     return 0;
 }
