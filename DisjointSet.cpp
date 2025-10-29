@@ -12,11 +12,25 @@ void Initial(int S[])
 }
 
 //return index of the root of a set i ,while S[i] equals to the negative of size
-int Find(int S[], int x)
+int Find1(int S[], int x)
 {
     while (S[x] >= 0)
         x = S[x];
     return x;
+}
+
+//Better approach using Path Compression
+int Find(int S[], int x)
+{
+    int root = x;
+    while (S[root] >= 0)
+        root = S[root];
+    while (x != root) {
+        int next = S[x];
+        S[x] = root;
+        x = next;
+    }
+    return root;
 }
 
 int Size(int S[], int x)
@@ -77,13 +91,6 @@ void BetterUnion(int S[], int Root1, int Root2)
 
 
 
-int BetterFind(int S[], int x)
-{
-    while (S[x] >= 0)
-        x = S[x];
-    return x;
-}
-
 
 
 int main()
@@ -105,8 +112,7 @@ int main()
     BetterUnion(set, 6, 1);
     BetterUnion(set, 5, 1);
     cout << "size of the set: " << Size(set, 1) << endl;
-    cout << "find the set of 3: " << Find(set, 3) << endl;
-    cout << "find the size of set of 3: " << Size(set, Find(set, 3)) << endl;
+    cout << "find the set of 1: " << Find(set, 1) << endl;
     cout << "find the size of set of 3: " << Size(set, 3) << endl;
     
     cout << "the final array" << endl;
