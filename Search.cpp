@@ -10,6 +10,13 @@ typedef struct {
     int TableLen;
 } SSTable;
 
+/**
+ * Searches for the specified key in the specified array using sequential search with sentinel.
+ *
+ * @param  ST the array of integers to search in
+ * @param  key the search key
+ * @return index of key in array {@code ST} if present; {@code 0} otherwise (sentinel position)
+ */
 int Search_seq(SSTable ST, ElemType key)
 {
     ST.elem[0] = key;
@@ -18,14 +25,25 @@ int Search_seq(SSTable ST, ElemType key)
     return i;
 }
 
+/**
+ * Searches for the specified key in the specified array using sequential search with early termination.
+ * If the array is sorted in ascending order, the search terminates early when encountering an element greater than the key.
+ *
+ * @param  ST the array of integers to search in
+ * @param  key the search key
+ * @return index of key in array {@code ST} if present; {@code -1} otherwise
+ */
 int Search_seq2(SSTable ST, ElemType key) {
     int pos = 0;
     bool found = false;
 
     while (pos <= ST.TableLen && !found) {
-        if (ST.elem[pos] == key)
+        if (ST.elem[pos] == key) {
             found = true;
-        else 
+        } else if (ST.elem[pos] < key) {
+            cout << "accepted";
+            return -1;
+        } else 
             pos++;
     }
     return (pos <= ST.TableLen) ? pos : -1;
@@ -65,7 +83,7 @@ int main() {
     ST.elem = (ElemType*)malloc(sizeof(ElemType) * (ST.TableLen + 1));
     ST.elem[0] = 0;
     for (int i = 1; i <= ST.TableLen; i++)
-        ST.elem[i] = i;
+        ST.elem[i] = 2 * i;
     int ans2 = Search_seq2(ST, 3);
     int ans3 = BinarySearch(ST, 3);
     int ans = Search_seq(ST, 3);
