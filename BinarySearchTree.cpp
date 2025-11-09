@@ -6,9 +6,16 @@ using namespace std;
 
 typedef struct BSTNode {
     int key;
-    //int size;
+    int size;
     struct BSTNode *lchild, *rchild;
 } BSTNode, *BSTree;
+
+
+int size(BSTree T) {
+    if (T == nullptr)
+        return 0;
+    return T->size;
+}
 
 BSTNode* search(BSTree T, int key) {
     while (T != nullptr && key != T->key) {
@@ -35,8 +42,10 @@ BSTNode* createNode(int key) {
     node->key = key;
     node->lchild = nullptr;
     node->rchild = nullptr;
+    node->size = 1;
     return node;
 }
+
 
 
 BSTNode* insert(BSTree T,int key) {
@@ -48,6 +57,7 @@ BSTNode* insert(BSTree T,int key) {
         T->rchild = insert(T->rchild, key);
     else 
         T->lchild = insert(T->lchild, key);
+    T->size = 1 + size(T->lchild)+ size(T->rchild); 
     return T;
 }
 
@@ -70,14 +80,19 @@ BSTNode* min(BSTree T) {
 }
 
 BSTNode* deleteMin(BSTree T) {
+    if (T == nullptr)  // 添加空指针检查
+    return nullptr;
     if (T->lchild == nullptr)
         return T->rchild;
     T->lchild = deleteMin(T->lchild);
+
+    T->size = 1 + size(T->lchild)+ size(T->rchild); 
     
     return T;
 }
 /**
  * deleting a node by swapping it with its successor.
+ * inspired by https://math.oxford.emory.edu/site/cs171/hibbardDeletion/
  */
 BSTNode* Delete(BSTree T, int key) {
     if (T == nullptr) 
@@ -90,18 +105,22 @@ BSTNode* Delete(BSTree T, int key) {
     else if (cmp > 0)
         T->rchild= Delete(T->rchild, key);
     else {
-        if (T->rchild == nullptr)
-            return T->lchild;
-        
+        if (T->rchild == nullptr) {
+            BSTNode* temp = T->lchild;
+            free(T);
+            return temp;
+        }
+
         BSTNode* t = T;
         
         T = min(T->rchild);
         T->rchild = deleteMin(t->rchild);
         T->lchild = t->lchild;
+        free(t);
     }
+    T->size = 1 + size(T->lchild)+ size(T->rchild);
     return T;
 }
-
 
 // 释放整棵树的内存
 void freeTree(BSTree T) {
@@ -135,12 +154,17 @@ int main() {
     cout << "====================" << endl;
     
     BSTree root = nullptr;
+    cout << "size of the tree is " << size(root) << endl;
     root = insert(root, 5);   // 保存返回值
     root = insert(root, 3);
     root = insert(root, 7);
+    cout << "size of the tree is " << size(root) << endl;
     root = insert(root, 2);
     root = insert(root, 4);
     root = insert(root, 9);
+
+    cout << "size of the tree is " << size(root) << endl;
+    cout << "size of right part of the tree is " << size(root->rchild) << endl;
 
     // 测试迭代搜索
     int testKeys[] = {5, 3, 7, 2, 4, 9, 1, 10};
@@ -161,11 +185,13 @@ int main() {
     cout << "found min node " << min(root)->key << endl;
     cout << "found min node " << min(root->rchild->rchild)->key << endl;
 
-    deleteMin(root);
+    root = deleteMin(root);
     cout << "delete the min of the tree" << endl;
     
-    Delete(root, 7);
+    cout << "size of the tree is " << size(root) << endl;
+    root = Delete(root, 7);
     cout << "delete the node of 7" << endl;
+    cout << "size of the tree is " << size(root) << endl;
 
     for (int i = 0; i < n; i++) {
         int key = testKeys[i];
