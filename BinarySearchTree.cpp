@@ -46,7 +46,7 @@ BSTNode* createNode(int key) {
     return node;
 }
 
-
+BSTNode* deleteMin(BSTree T, bool freeRemoved);
 
 BSTNode* insert(BSTree T,int key) {
     if (T == nullptr)
@@ -79,15 +79,15 @@ BSTNode* min(BSTree T) {
         return T;
 }
 
-BSTNode* deleteMin(BSTree T) {
-    if (T == nullptr)  // 添加空指针检查
-    return nullptr;
-    if (T->lchild == nullptr)
-        return T->rchild;
-    T->lchild = deleteMin(T->lchild);
-
-    T->size = 1 + size(T->lchild)+ size(T->rchild); 
-    
+BSTNode* deleteMin(BSTree T, bool freeRemoved) {
+    if (T == nullptr) return nullptr;
+    if (T->lchild == nullptr) {
+        BSTNode* right = T->rchild;
+        if (freeRemoved) free(T);  // free when caller wants to actually delete the node's memory
+        return right;
+    }
+    T->lchild = deleteMin(T->lchild, freeRemoved);
+    T->size = 1 + size(T->lchild) + size(T->rchild);
     return T;
 }
 /**
@@ -114,7 +114,7 @@ BSTNode* Delete(BSTree T, int key) {
         BSTNode* t = T;
         
         T = min(T->rchild);
-        T->rchild = deleteMin(t->rchild);
+        T->rchild = deleteMin(t->rchild, false);
         T->lchild = t->lchild;
         free(t);
     }
@@ -185,7 +185,7 @@ int main() {
     cout << "found min node " << min(root)->key << endl;
     cout << "found min node " << min(root->rchild->rchild)->key << endl;
 
-    root = deleteMin(root);
+    root = deleteMin(root, true);
     cout << "delete the min of the tree" << endl;
     
     cout << "size of the tree is " << size(root) << endl;
