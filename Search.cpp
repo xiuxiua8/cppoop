@@ -40,8 +40,8 @@ int Search_seq2(SSTable ST, ElemType key) {
     while (pos <= ST.TableLen && !found) {
         if (ST.elem[pos] == key) {
             found = true;
-        } else if (ST.elem[pos] < key) {
-            cout << "accepted";
+        } else if (ST.elem[pos] < key && ST.elem[pos+1] > key) {
+            cout << "quit!" << endl;
             return -1;
         } else 
             pos++;
@@ -50,29 +50,33 @@ int Search_seq2(SSTable ST, ElemType key) {
 }
 
 /**
- * Returns the index of the specified key in the specified array.
+ * Binary search on a 0-based sorted array.
  *
- * @param  ST the array of integers, must be sorted in ascending order
- * @param  key the search key
- * @return index of key in array {@code ST} if present; {@code -1} otherwise
+ * @param  A   sorted array of integers (0-based indexing)
+ * @param  len number of valid elements in {@code A}
+ * @param  key search target
+ * @return index of {@code key} if found; otherwise {@code -hi}, where {@code -returnValue}
+ *         marks the insertion position that keeps the array sorted
  */
-int BinarySearch(SSTable ST, ElemType key) {
-    /* 无哨兵
+int BinarySearch(ElemType *A, int len, ElemType key) {
     int lo = 0;
-    int hi = ST.TableLen - 1;
-    */
+    int hi = len - 1;
 
+    /* 哨兵
     int lo = 1;
-    int hi = ST.TableLen;
+    int hi = len;
+    */
+    int mid;
     while (lo <= hi) {
         // Key is in a[lo..hi] or not present.
-        int mid = lo + (hi - lo) / 2;
+        mid = lo + (hi - lo) / 2;
         //cout << lo << ' ' << mid << ' '<< hi << endl;
-        if (key < ST.elem[mid]) hi = mid -1;
-        else if (key > ST.elem[mid]) lo = mid + 1;
+        if (key < A[mid]) hi = mid -1;
+        else if (key > A[mid]) lo = mid + 1;
         else return mid;
+        
     }
-    return -1;
+    return -hi;
 }
 
 
@@ -82,15 +86,28 @@ int main() {
     ST.TableLen = 10;
     ST.elem = (ElemType*)malloc(sizeof(ElemType) * (ST.TableLen + 1));
     ST.elem[0] = 0;
-    for (int i = 1; i <= ST.TableLen; i++)
-        ST.elem[i] = 2 * i;
-    int ans2 = Search_seq2(ST, 3);
-    int ans3 = BinarySearch(ST, 3);
-    int ans = Search_seq(ST, 3);
-    cout << ans << endl;
-    cout << ans2 << endl;
-    cout << ans3 << endl;
+    for (int i = 1; i <= ST.TableLen; i++) {
+        ST.elem[i] = 2*i;
+        cout << ST.elem[i] << " " ;
+    }
+    cout << endl;
     
+    /*test 1*/
+    int ans2 = Search_seq2(ST, 3);
+    int ans3 = BinarySearch(ST.elem, ST.TableLen, 2);
+    int ans1 = Search_seq(ST, 3);
+    cout << "ans1: " << ans1 << endl;
+    cout << "ans2: " << ans2 << endl;
+    cout << "ans3: " << ans3 << endl;
+
+    /*test 2*/
+    int ans2 = Search_seq2(ST, 3);
+    cout << "------" << endl;
+    for (int i = 1; i < 10; i++) {
+        cout << "searching for: " << 2 * i - 1 << endl;
+        ans3 = BinarySearch(ST.elem, ST.TableLen, 2*i -1);
+        cout << "ans3: " << ans3 << endl;
+    }
 
     free(ST.elem);
     return 0;
