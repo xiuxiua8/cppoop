@@ -2,10 +2,9 @@
 #include <stdlib.h>
 #include <iostream>
 #include <vector>
+using namespace std;
 
 #define MaxSize 50
-
-using namespace std;
 
 typedef int ElemType;
 
@@ -16,25 +15,43 @@ void swap(ElemType A[], int a, int b) {
     A[b] = temp;
 }
 
-void printList(ElemType A[], int n) {
-    for (int i=0; i<n; i++) {
+void printList(ElemType A[], int len) {
+    for (int i=0; i<len; i++) {
         cout << A[i] << " ";
     }
     cout << endl;
 }
 
 
-void SelectionSort(ElemType A[], int n) {
-    for (int i=0; i<n; i++) {
+void SelectionSort(ElemType A[], int len) {
+    for (int i=0; i<len-1; i++) {
         int min = i;
-        for (int j=i; j<n; j++) {
+        for (int j=i + 1; j<len; j++) {
             if (A[j] < A[min])
                 min = j;
         }
-        swap(A, min, i);
+        if (min != i)
+            swap(A, min, i);
     }
 }
 
+void sink(ElemType A[], int k, int len) {
+    if ()
+    
+}
+
+void BottomUpHeapify(ElemType A[], int len) {
+    for (int i=len-1; i > 0; i--) {
+        
+    }
+}
+
+void BuildMaxHeap(ElemType A[], int len) {
+}
+
+void HeadAdjust(ElemType A[], int k, int len) {
+
+}
 
 int main() {
     ElemType A[] = {9, 2, 8, 4, 5};
