@@ -28,8 +28,9 @@ void add(PriorityQueue &Q);
 ElemType getSmallest(PriorityQueue &Q);
 ElemType removeSmallest(PriorityQueue &Q);
 int size(PriorityQueue &Q);
+void swim(PriorityQueue &Q, int k);
 
-void initQueue(PriorityQueue &Q)
+void InitQueue(PriorityQueue &Q)
 {
     Q.size = 0;
 }
@@ -39,13 +40,7 @@ bool isEmpty(PriorityQueue &Q)
     return Q.size == 0;
 }
 
-/** place the new employee in the last position, and promote as high as possible.
- */
-void add(PriorityQueue &Q, int item)
-{
-    Q.data[Q.size + 1] = item;
-    Q.size++;
-}
+
 
 /** leave spot 0 empty */
 int parent(int k)
@@ -70,33 +65,68 @@ void swap(PriorityQueue &Q, int a, int b)
     Q.data[b] = temp;
 }
 
-void swim(PriorityQueue &Q, int k)
-{
-    if (Q.data[parent(k) > Q.data[k]])
-        swap(Q, k, parent(k));
-    swim(Q, parent(k));
-}
-
 /** return the item in the root node */
 ElemType getSmallest(PriorityQueue &Q)
 {
     return Q.data[1];
 }
 
-/** assassinate the president, promote the rightmost person in the company to president, then demote repeatedly, always taking the better successor */
+/** place the new employee in the last position, and promote as high as possible.*/
+void add(PriorityQueue &Q, int item)
+{
+    Q.data[Q.size + 1] = item;
+    cout << "insert " << item;
+    cout << "(" << Q.size +1 << ")";
+    cout << endl;
+    Q.size++;
+    swim(Q, Q.size);
+}
+
+void swim(PriorityQueue &Q, int k)
+{
+    if (k <= 1) return;
+    if (Q.data[parent(k)] > Q.data[k]) {
+        cout << "swap " << Q.data[parent(k)] << " and " << Q.data[k];
+        cout << endl;
+        swap(Q, k, parent(k));
+    }
+    swim(Q, parent(k));
+}
+
+void sink(PriorityQueue &Q, int k) {
+    while(leftChild(k) <= Q.size) {
+        int j = leftChild(k);
+        if (j < Q.size && Q.data[j] > Q.data[j + 1]) j++;
+        if (Q.data[k] <= Q.data[j]) break;
+        swap(Q, k, j);
+        k = j;
+    }
+}
+
+/** assassinate the president, promote the rightmost person in the company to president, 
+ * then demote repeatedly, always taking the better successor */
 ElemType removeSmallest(PriorityQueue &Q)
 {
     int smallest = Q.data[1];
     swap(Q, 1, Q.size);
     Q.size--;
+    sink(Q, 1);
+    cout << "remove item " << smallest << endl;
     return smallest;
 }
 
 void printList(ElemType A[], int len)
 {
-    for (int i = 0; i < len; i++)
+    //cout << A[0] << " ";
+    cout << "- ";
+    for (int i = 1; i < len + 1; i++)
     {
         cout << A[i] << " ";
+    }
+    cout << endl;
+    for (int i = 0; i < len + 1; i++)
+    {
+        cout << i << " ";
     }
     cout << endl;
 }
@@ -105,4 +135,11 @@ int main()
 {
     PriorityQueue A;
     InitQueue(A);
+    for (int i = 5; i > 0; i--) {
+        add(A, i);
+    }
+    add(A, 9);
+    printList(A.data, A.size);
+    removeSmallest(A);
+    printList(A.data, A.size);
 }
