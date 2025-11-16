@@ -101,7 +101,6 @@ int main() {
     cout << "ans3: " << ans3 << endl;
 
     /*test 2*/
-    int ans2 = Search_seq2(ST, 3);
     cout << "------" << endl;
     for (int i = 1; i < 10; i++) {
         cout << "searching for: " << 2 * i - 1 << endl;

@@ -22,6 +22,7 @@ void swap(ElemType A[], int a, int b) {
     A[b] = temp;
 }
 
+
 void printList(ElemType A[], int len) {
     for (int i=0; i<len; i++) {
         cout << A[i] << " ";
@@ -117,9 +118,33 @@ void MergeSort(ElemType A[], int l, int h) {
     }
 }
 
-void QuickSort(ElemType A[], int l, int r) {
-    if (l >= r) return;
 
+int Partition(ElemType A[], int l, int h) {
+    // Hoare-style: pivot at l, scan inward and fill the “hole” left by pivot
+    int pivot = l;
+    ElemType key = A[pivot];
+    while (l < h) {
+        while (l < h && A[h] >= key)
+            h--;
+        if (l < h)
+            A[l] = A[h];
+        while (l < h && A[l] <= key)
+            l++;
+        if (l < h)
+            A[h] = A[l];
+    }
+    A[l] = key;
+    printList(A, 25);
+    return l;
+}
+
+
+
+void QuickSort(ElemType A[], int l, int h) {
+    if (l >= h) return;
+    int pivot = Partition(A, l, h);
+    QuickSort(A, l, pivot-1);
+    QuickSort(A, pivot+1, h);
 }
 
 
@@ -136,7 +161,8 @@ int main() {
     //InsertionSort(A, sizeofA);
     //BinaryInsertionSort(A, sizeofA);
     //HeapSort(A, sizeofA);
-    MergeSort(A, 0, sizeofA - 1);
+    //MergeSort(A, 0, sizeofA - 1);
+    QuickSort(A, 0, sizeofA - 1);
     cout << "sorted array:" << endl;
     printList(A, sizeofA);
 }
