@@ -75,9 +75,7 @@ ElemType getSmallest(PriorityQueue &Q)
 void add(PriorityQueue &Q, int item)
 {
     Q.data[Q.size + 1] = item;
-    cout << "insert " << item;
-    cout << "(" << Q.size +1 << ")";
-    cout << endl;
+    //cout << "insert " << item << "(" << Q.size +1 << ")" << endl;
     Q.size++;
     swim(Q, Q.size);
 }
@@ -86,8 +84,7 @@ void swim(PriorityQueue &Q, int k)
 {
     if (k <= 1) return;
     if (Q.data[parent(k)] > Q.data[k]) {
-        cout << "swap " << Q.data[parent(k)] << " and " << Q.data[k];
-        cout << endl;
+        //cout << "swap " << Q.data[parent(k)] << " and " << Q.data[k] << endl;
         swap(Q, k, parent(k));
     }
     swim(Q, parent(k));
@@ -111,11 +108,11 @@ ElemType removeSmallest(PriorityQueue &Q)
     swap(Q, 1, Q.size);
     Q.size--;
     sink(Q, 1);
-    cout << "remove item " << smallest << endl;
+    //cout << "remove item " << smallest << endl;
     return smallest;
 }
 
-void printList(ElemType A[], int len)
+void printList1(ElemType A[], int len)
 {
     //cout << A[0] << " ";
     cout << "- ";
@@ -139,7 +136,8 @@ int main()
         add(A, i);
     }
     add(A, 9);
-    printList(A.data, A.size);
+    printList1(A.data, A.size);
     removeSmallest(A);
-    printList(A.data, A.size);
+    printList1(A.data, A.size);
+    return 0;
 }

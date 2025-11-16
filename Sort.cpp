@@ -2,6 +2,10 @@
 #include <stdlib.h>
 #include <iostream>
 #include <vector>
+#define main PQ_demo_main
+#include "PriorityQueue.cpp"
+#undef main
+
 using namespace std;
 
 #define MaxSize 50
@@ -24,6 +28,7 @@ void printList(ElemType A[], int len) {
 
 
 void SelectionSort(ElemType A[], int len) {
+    cout << "Selection sort!!" << endl;
     for (int i=0; i<len-1; i++) {
         int min = i;
         for (int j=i + 1; j<len; j++) {
@@ -35,29 +40,28 @@ void SelectionSort(ElemType A[], int len) {
     }
 }
 
-void sink(ElemType A[], int k, int len) {
-    if ()
-    
-}
-
-void BottomUpHeapify(ElemType A[], int len) {
-    for (int i=len-1; i > 0; i--) {
-        
+void HeapSort(ElemType A[], int len) {
+    cout << "Heap sort!!" << endl;
+    PriorityQueue Queue;
+    InitQueue(Queue);
+    for (int i=0; i<len; i++) {
+        add(Queue, A[i]);
     }
-}
-
-void BuildMaxHeap(ElemType A[], int len) {
-}
-
-void HeadAdjust(ElemType A[], int k, int len) {
-
+    for (int i=0; i<len; i++) {
+        int min = removeSmallest(Queue);
+        A[i] = min;
+    }
 }
 
 int main() {
     ElemType A[] = {9, 2, 8, 4, 5};
     int sizeofA = 5;
+    cout << "unsorted array:" << endl;
     printList(A, sizeofA);
-    SelectionSort(A, sizeofA);
+    //SelectionSort(A, sizeofA);
+    HeapSort(A, sizeofA);
+    cout << "sorted array:" << endl;
     printList(A, sizeofA);
+    
 
 }
