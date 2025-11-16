@@ -53,15 +53,41 @@ void HeapSort(ElemType A[], int len) {
     }
 }
 
+
+ElemType *B= (ElemType *)malloc((MaxSize+1)*sizeof (ElemType));
+
+void Merge(ElemType A[], int l, int m, int h) {
+    int i, j, k;
+    for (k = l; k <=h; k++)
+        B[k] = A[k];
+    for (i=l, j=m+1, k=i; i<=m&&j<=h; k++) {
+        if (B[i]<=B[j]) 
+            A[k] = B[i++];
+        else 
+            A[k] = B[j++];
+    }
+    while (i<=m) A[k++] = B[i++];
+    while (j<=h) A[k++] = B[j++];
+    //printList(A, 5);
+}
+
+void MergeSort(ElemType A[], int l, int h) {
+    if (l < h){
+        int m = (h + l)/2;
+        MergeSort(A, l, m);
+        MergeSort(A, m + 1, h);
+        Merge(A, l, m, h);
+    }
+}
+
 int main() {
-    ElemType A[] = {9, 2, 8, 4, 5};
+    ElemType A[] = {9, 2, 8, 5, 4};
     int sizeofA = 5;
     cout << "unsorted array:" << endl;
     printList(A, sizeofA);
     //SelectionSort(A, sizeofA);
-    HeapSort(A, sizeofA);
+    //HeapSort(A, sizeofA);
+    MergeSort(A, 0, sizeofA - 1);
     cout << "sorted array:" << endl;
     printList(A, sizeofA);
-    
-
 }
