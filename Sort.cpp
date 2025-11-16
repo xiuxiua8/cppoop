@@ -5,6 +5,9 @@
 #define main PQ_demo_main
 #include "PriorityQueue.cpp"
 #undef main
+#define main search_demo_main
+#include "Search.cpp"
+#undef main
 
 using namespace std;
 
@@ -39,6 +42,40 @@ void SelectionSort(ElemType A[], int len) {
             swap(A, min, i);
     }
 }
+
+
+void InsertionSort(ElemType A[], int len) {
+    cout << "Insertion sort!!" << endl;
+    int i, j, k;
+    for (int i=1; i<len; i++) {
+        k=A[i];
+        j=i-1;
+        while((j>=0) && (A[j]>k)) {
+            A[j+1] = A[j];
+            j--;
+        }
+        A[j+1] = k;
+        //printList(A, len);
+    }
+}
+
+
+void BinaryInsertionSort(ElemType A[], int len) {
+    cout << "BinaryInsertion sort!!" << endl;
+    int i, j, k;
+    for (int i=1; i<len; i++) {
+        k=A[i];
+        j=i-1;
+        int min = - BinarySearch(A, i, A[i]);
+        while(j>min) {
+            A[j+1] = A[j];
+            j--;
+        }
+        A[j+1] = k;
+        printList(A, len);
+    }
+}
+
 
 void HeapSort(ElemType A[], int len) {
     cout << "Heap sort!!" << endl;
@@ -80,12 +117,24 @@ void MergeSort(ElemType A[], int l, int h) {
     }
 }
 
+void QuickSort(ElemType A[], int l, int r) {
+    if (l >= r) return;
+
+}
+
+
 int main() {
+    /*
     ElemType A[] = {9, 2, 8, 5, 4};
     int sizeofA = 5;
+    */
+    ElemType A[] = {42, 17, 89, 3, 56, 23, 91, 8, 34, 67, 12, 45, 78, 29, 61, 5, 38, 84, 19, 72, 15, 53, 96, 27, 64};
+    int sizeofA = 25;
     cout << "unsorted array:" << endl;
     printList(A, sizeofA);
     //SelectionSort(A, sizeofA);
+    //InsertionSort(A, sizeofA);
+    //BinaryInsertionSort(A, sizeofA);
     //HeapSort(A, sizeofA);
     MergeSort(A, 0, sizeofA - 1);
     cout << "sorted array:" << endl;
