@@ -138,8 +138,6 @@ int Partition(ElemType A[], int l, int h) {
     return l;
 }
 
-
-
 void QuickSort(ElemType A[], int l, int h) {
     if (l >= h) return;
     int pivot = Partition(A, l, h);
@@ -147,6 +145,17 @@ void QuickSort(ElemType A[], int l, int h) {
     QuickSort(A, pivot+1, h);
 }
 
+
+void BubbleSort(ElemType A[], int len) {
+    cout << "Bubble sort!!" << endl;
+    for (int i=0; i<len; i++) {
+        for (int j=0; j< len -i -1; j++) {
+            if (A[j] > A[j+1])
+                swap(A, j, j+1);
+        }
+        //printList(A, len);
+    }
+}
 
 int main() {
     /*
@@ -162,7 +171,8 @@ int main() {
     //BinaryInsertionSort(A, sizeofA);
     //HeapSort(A, sizeofA);
     //MergeSort(A, 0, sizeofA - 1);
-    QuickSort(A, 0, sizeofA - 1);
+    //QuickSort(A, 0, sizeofA - 1);
+    BubbleSort(A, sizeofA);
     cout << "sorted array:" << endl;
     printList(A, sizeofA);
 }
