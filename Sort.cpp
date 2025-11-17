@@ -149,11 +149,15 @@ void QuickSort(ElemType A[], int l, int h) {
 void BubbleSort(ElemType A[], int len) {
     cout << "Bubble sort!!" << endl;
     for (int i=0; i<len; i++) {
+        bool flag = false;
         for (int j=0; j< len -i -1; j++) {
-            if (A[j] > A[j+1])
-                swap(A, j, j+1);
+            if (A[j] > A[j+1]) {
+                swap(A, j, j + 1);
+                flag = true;
+            }
         }
-        //printList(A, len);
+        if (!flag) return;
+        printList(A, len);
     }
 }
 
